@@ -1,0 +1,4 @@
+.ipynb_checkpoints
+TSDT/__pycache__/
+Fast-TSDT/__pycache__/
+.DS_Store
