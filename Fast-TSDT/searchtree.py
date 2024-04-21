@@ -177,7 +177,6 @@ class SearchTreeNode:
         self.mu, self.sigma = mu, sigma
         
     def expand(self, leaf, thresh, thresh_tree):
-#    def expand(self, leaf, thresh, thresh_mu, thresh_sigma):
         """
         Description
         -----------------------
@@ -208,7 +207,6 @@ class SearchTreeNode:
             mu_max, sigma_max = self.children[1/2][0].mu, self.children[1/2][0].sigma
             self.children[1/2][0].tree.update_value()
             if self.children[1/2][0].tree.value > -thresh_tree:
-#            if (self.children[1/2][0].mu > thresh_mu) and (self.children[1/2][0].sigma < thresh_sigma):
                 return self.children[1/2][0]
             
         except KeyError:
@@ -217,7 +215,6 @@ class SearchTreeNode:
             mu_max, sigma_max = self_copy.mu, self_copy.sigma
             self_copy.tree.update_value()
             if self_copy.tree.value > -thresh_tree:
-#            if (self_copy.mu > thresh_mu) and (self_copy.sigma < thresh_sigma):
                 return self_copy
             
             self.children[1/2] = [self_copy]
@@ -233,7 +230,6 @@ class SearchTreeNode:
                 
             child.tree.update_value()
             if child.tree.value > -thresh_tree:
-#            if (child.mu > thresh_mu) and (child.sigma < thresh_sigma):
                 return child
             
             params.append((child.mu, child.sigma))
@@ -252,7 +248,6 @@ class SearchTreeNode:
                     
                 searchtree_node.tree.update_value()
                 if searchtree_node.tree.value > -thresh_tree:
-#                if (searchtree_node.mu > thresh_mu) and (searchtree_node.sigma < thresh_sigma):
                     return searchtree_node
                 
                 params.append((searchtree_node.mu, searchtree_node.sigma))
@@ -299,7 +294,6 @@ class SearchTreeNode:
                     
                 searchtree_node.tree.update_value()
                 if searchtree_node.tree.value > -thresh_tree:
-#                if (searchtree_node.mu > thresh_mu) and (searchtree_node.sigma < thresh_sigma):
                     return searchtree_node
                 
                 params.append((searchtree_node.mu, searchtree_node.sigma))
@@ -506,7 +500,7 @@ class SearchTree:
         """
         Description
         -----------------------
-        Select the most promising node for TCDT.
+        Select the most promising node for TSDT.
 
         Parameters
         -----------------------
@@ -553,7 +547,6 @@ class SearchTree:
             leaf = node.update_statistics(X, y)
             
     def expand(self, searchtree_node, thresh_leaf, thresh_tree):
-#    def expand(self, searchtree_node, thresh_leaf, thresh_mu, thresh_sigma):
         """
         Description
         -----------------------
@@ -573,7 +566,6 @@ class SearchTree:
             
         leaf = heapq.heappop(searchtree_node.leaves_active)
         return searchtree_node.expand(leaf, thresh_leaf, thresh_tree)
-#        return searchtree_node.expand(leaf, thresh_leaf, thresh_mu, thresh_sigma)
             
     def backpropagate(self, searchtree_node):
         """
@@ -597,11 +589,9 @@ class SearchTree:
             for child in chain.from_iterable(parent.children.values()):
                 assert child.mu is not None, "mu should not be NaN"
                 assert child.sigma is not None, "sigma should not be NaN"
-#                start_time = time()
                 if child.mu > mu_max:
                     mu_max, sigma_max = child.mu, child.sigma
                     
-#                print(time() - start_time)
                 
             # Update (mu, sigma) for the normal approximation of the prior of the parent Search Node.
             parent.replace_mu_sigma(mu_max, sigma_max)
@@ -755,7 +745,6 @@ def approximate_beta(alpha, beta, gamma=0.5):
     mu, sigma : Floats, mean and std of the Normal approximation of the Beta distribution
     """
     
-#    return alpha/(alpha + beta), (np.sqrt(alpha*beta/((alpha+beta)**2*(alpha+beta+1))))**gamma
     return alpha/(alpha + beta), np.sqrt(alpha*beta/((alpha+beta)**2*(alpha+beta+1)))
 
 def approximate_max_normal_2(params):
